@@ -31,6 +31,10 @@ makeRequest('/dashboard', function() {
             return item.field1;
           });
         console.log(op);
+        var dates = data1.feeds.map(function(item) {
+          return item.created_at;
+        });
+        console.log(dates);
         add = function(arr) {
             return arr.reduce((a, b) => +a + +b, 0);
         };
@@ -152,7 +156,37 @@ makeRequest('/dashboard', function() {
           }
           cum +="</table>";
           table.innerHTML = cum;
-});
+          var ctx = document.getElementById('myChart').getContext('2d');
+          var myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                  labels: dates,
+                  datasets: [{
+                      label: 'Litres',
+                      data: op,
+                      borderColor: [
+                          'rgba(103, 183, 220, 1)',
+                          'rgba(54, 162, 235, 1)'
+                      ],
+                      borderWidth: 1
+                  }]
+              },
+              options: {
+                  scales: {
+                      y: {
+                        ticks: {
+                          color : "#6671db"
+                      }
+                      },
+                      x: {
+                        ticks: {
+                          color : "#6671db"
+                      }
+                      }
+                  }
+                }
+          });
+          });
   
 
 }); // end am4core.ready()
