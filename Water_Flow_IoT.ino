@@ -1,6 +1,7 @@
 //----------Libraries--------------//
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266HTTPClient.h>
+#include <ThingSpeak.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -28,7 +29,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 //----------------API Keys------------------//
 String api_key = "54BPEI139PN3ZIT6";
-char thingSpeakAddress[] = "api.thingspeak.com";
+char* server = "api.thingspeak.com";
 unsigned long channelID = 1354031;
 char* readAPIKey = "2Y8N4DNDSEPCD4BR";
 const char * myCounterReadAPIKey = "2Y8N4DNDSEPCD4BR";
@@ -75,6 +76,7 @@ void setup() {
   display.setTextColor(WHITE);
   display.println("Connecting...");
   wificonnect();
+  aConst = readTSData( channelID, aField );
 
   //---------------- Channel----------------//
   display.clearDisplay();
@@ -113,6 +115,15 @@ void wificonnect() {
     delay(100);
   }
   Serial.print("Connected to HOTSPOT..\n");
+  ThingSpeak.begin( client );
+}
+
+int readTSData( long TSChannel, unsigned int TSField ) {
+
+  float data =  ThingSpeak.readIntField( TSChannel, TSField, readAPIKey );
+  Serial.println( " Data read from ThingSpeak: " + String( data, 9 ) );
+  return data;
+
 }
 
 void GETsend(float data) {
@@ -178,9 +189,10 @@ void loop() {
 
     if(startAlert){
       currMillis = millis();
-      Serial.println(currMillis);
-      Serial.println(prevMillis);
-      if(currMillis - prevMillis > 15000){
+//      Serial.println(currMillis);
+//      Serial.println(prevMillis);
+        Serial.println(aConst);
+      if(currMillis - prevMillis > aConst){
         Serial.println("TAP IS OPEN");
         sendEmail(12);
         startAlert = false;
@@ -222,6 +234,7 @@ void loop() {
       flowMilliLitres = 0;
       p = millis();
       start = false;
+      startAlert = false;
     }
   }
 
