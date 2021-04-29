@@ -1,8 +1,6 @@
-
 //----------Libraries--------------//
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266HTTPClient.h>
-#include "ThingSpeak.h"
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -30,6 +28,9 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 //----------------API Keys------------------//
 String api_key = "54BPEI139PN3ZIT6";
+char thingSpeakAddress[] = "api.thingspeak.com";
+unsigned long channelID = 1354031;
+char* readAPIKey = "2Y8N4DNDSEPCD4BR";
 const char * myCounterReadAPIKey = "2Y8N4DNDSEPCD4BR";
 
 //-------------------Variables------------------//
@@ -51,12 +52,16 @@ bool start = false;
 bool startAlert = false;
 long currMillis = 0;
 long prevMillis = 0;
+unsigned int aField = 2;
+unsigned int aConst = 5000;  
 const char* host = "maker.ifttt.com";
 
 //----------------Pulse Counter for Water Flow-------------------//
 void IRAM_ATTR pulseCounter() {
   pulseCount++;
 }
+
+
 
 void setup() {
   Serial.begin(115200);
@@ -80,21 +85,6 @@ void setup() {
   display.println("Setting up the device...");
 
   startAlert = false;
-  //-------------Intial Total Litres-------------//
-  ThingSpeak.begin(client);
-  float vol = ThingSpeak.readFloatField(counterChannelNumber, FieldNumber1, myCounterReadAPIKey);
-  int statusCode = ThingSpeak.getLastReadStatus();
-  if (statusCode == 200)
-  {
-    Serial.print("Volume: ");
-    totalLitres = vol;
-    Serial.println(vol);
-  }
-  else
-  {
-    Serial.println("Unable to read channel / No internet connection");
-  }
-  delay(100);
 
   //---------------Initializing Pins-------------//
   pinMode(LED_BUILTIN, OUTPUT);
@@ -190,7 +180,7 @@ void loop() {
       currMillis = millis();
       Serial.println(currMillis);
       Serial.println(prevMillis);
-      if(currMillis - prevMillis > 5000){
+      if(currMillis - prevMillis > 15000){
         Serial.println("TAP IS OPEN");
         sendEmail(12);
         startAlert = false;
@@ -228,7 +218,10 @@ void loop() {
     c = millis();
     if (start && flowRate == 0.0 && ((c - p > 16000) || p == 0)) {
       GETsend(totalLitres);
+      totalLitres = 0.0;
+      flowMilliLitres = 0;
       p = millis();
+      start = false;
     }
   }
 
