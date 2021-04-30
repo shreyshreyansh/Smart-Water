@@ -1,0 +1,60 @@
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: #141517;
+}
+.Log-in {
+  margin-left: 35%;
+  margin-top: 15%;
+  background-color: #181c1f;
+  padding-bottom: 2%;
+  border-radius: 5px;
+}
+
+.loginHead {
+  text-align: center;
+  color: #fff;
+}
+
+.icon {
+  color: #fff;
+  margin-right: 2.5%;
+  margin-left: 5%;
+}
+
+.signin {
+  margin-left: 42.5%;
+  margin-top: 3%;
+  padding-left: 3%;
+  padding-right: 3%;
+  border-radius: 5px;
+  border: 1px solid #fff;
+  background-color: #181c1f;
+  color: #fff;
+}
+.signin:hover {
+  margin-left: 42.5%;
+  margin-top: 3%;
+  padding-left: 3%;
+  padding-right: 3%;
+  border-radius: 5px;
+  border: 1px solid #181c1f;
+  background-color: #fff;
+  color: #181c1f;
+}
+
+.formInnerBox {
+  background-color: #181c1f;
+  border: 0px;
+  width: 80%;
+  height: 30px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  color: #fff;
+  padding: 3px 6px;
+  margin-top: 2.5%;
+  margin-bottom: 2.5%;
+}
+input:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0px 1000px #181c1f inset;
+}
