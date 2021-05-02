@@ -16,7 +16,7 @@ function makeRequest(url, callback) {
 
 // https://api.thingspeak.com/channels/1354031/feeds.json?api_key=2Y8N4DNDSEPCD4BR&start=2021-04-01%2000:00:00&end=2021-04-28%2000:00:00&sum=daily
 
-makeRequest("/dashboardData", function (data) {
+makeRequest("/companyUserData", function (data) {
   var data = JSON.parse(data.responseText);
   console.log(data);
   var innerText =
@@ -302,3 +302,36 @@ makeRequest("/dashboardData", function (data) {
   xhttp.open("GET", link, false);
   xhttp.send();
 }); // end am4core.ready()
+function formatDate() {
+  var d = new Date(),
+    month = "" + (d.getMonth() + 1),
+    day = "" + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [day, month, year].join("/");
+}
+function sendEmail() {
+  makeRequest("/companyUserData", function (data) {
+    var data = JSON.parse(data.responseText);
+    var time = formatDate();
+    var consumption = data.consumption;
+    var cost = Number(data.consumption) * 5;
+    var link =
+      "https://maker.ifttt.com/trigger/send_invoice/with/key/" +
+      data.iftttAPIKey +
+      "?&value1=" +
+      time +
+      "&value2=" +
+      consumption +
+      "&value3=" +
+      cost;
+    var doodle = "Email has been sent to" + data.userName;
+    alert(doodle);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", link, false);
+    xhttp.send();
+  });
+}
