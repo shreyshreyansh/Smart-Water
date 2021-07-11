@@ -16,7 +16,7 @@
 #define SENSOR D4
 
 //---------Channel Details---------//
-unsigned long counterChannelNumber = 1354031;
+unsigned long counterChannelNumber = 1374592;
 const int FieldNumber1 = 1; 
 
 //----------WiFi Setup------------//
@@ -28,11 +28,11 @@ WiFiClient client;
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 //----------------API Keys------------------//
-String api_key = "54BPEI139PN3ZIT6";
+String api_key = "PLYR51A2489LFDRA";
 char* server = "api.thingspeak.com";
-unsigned long channelID = 1354031;
-char* readAPIKey = "2Y8N4DNDSEPCD4BR";
-const char * myCounterReadAPIKey = "2Y8N4DNDSEPCD4BR";
+unsigned long channelID = 1374592;
+char* readAPIKey = "YKIP3ZPQJXSX6KSV";
+const char * myCounterReadAPIKey = "YKIP3ZPQJXSX6KSV";
 
 //-------------------Variables------------------//
 long currentMillis = 0;
@@ -57,7 +57,7 @@ unsigned int aField = 2;
 unsigned int aConst = 5000;  
 const char* host = "maker.ifttt.com";
 
-//----------------Pulse Counter for Water Flow-------------------//
+//----------------Interrupt Service Routine-------------------//
 void IRAM_ATTR pulseCounter() {
   pulseCount++;
 }
@@ -189,8 +189,6 @@ void loop() {
 
     if(startAlert){
       currMillis = millis();
-//      Serial.println(currMillis);
-//      Serial.println(prevMillis);
         Serial.println(aConst);
       if(currMillis - prevMillis > aConst){
         Serial.println("TAP IS OPEN");
@@ -201,7 +199,6 @@ void loop() {
 
     //-----------OLED DISPLAY-----------//
     display.clearDisplay();
-
     display.setCursor(10, 0); //oled display
     display.setTextSize(1);
     display.setTextColor(WHITE);
